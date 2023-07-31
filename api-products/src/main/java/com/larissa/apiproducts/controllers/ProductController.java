@@ -36,7 +36,7 @@ public class ProductController {
         if (product.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(product);
+        return ResponseEntity.status(HttpStatus.OK).body(product.get());
     }
 
 }
