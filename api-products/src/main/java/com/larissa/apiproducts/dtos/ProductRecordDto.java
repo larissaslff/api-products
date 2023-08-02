@@ -1,5 +1,6 @@
 package com.larissa.apiproducts.dtos;
 
+import com.larissa.apiproducts.models.ProductModel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

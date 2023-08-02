@@ -1,7 +1,9 @@
 package com.larissa.apiproducts.services;
 
+import com.larissa.apiproducts.dtos.ProductRecordDto;
 import com.larissa.apiproducts.models.ProductModel;
 import com.larissa.apiproducts.repositories.ProductRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,4 +24,11 @@ public class ProductService {
         Optional<ProductModel> product = productRepository.findById(id);
         return product;
     }
+    public ProductModel saveNewProduct(ProductRecordDto productDto) {
+        ProductModel product = new ProductModel();
+        BeanUtils.copyProperties(productDto, product);
+        ProductModel savedProduct = productRepository.save(product);
+        return savedProduct;
+    }
+
 }
