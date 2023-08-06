@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -97,6 +96,24 @@ class ProductServiceTest {
 
         assertTrue(productNotFound.isEmpty());
 
+    }
 
+    @Test
+    public void shouldDelete(){
+        when(productRepository.findById(p1.getIdProduct())).thenReturn(Optional.of(p1));
+
+        boolean deletedProduct = service.deleteProduct(p1.getIdProduct());
+
+        assertTrue(deletedProduct);
+    }
+
+    @Test
+    public void shouldNotDelete(){
+        UUID randomUUID = UUID.randomUUID();
+        when(productRepository.findById(randomUUID)).thenReturn(Optional.empty());
+
+        boolean deletedProduct = service.deleteProduct(randomUUID);
+
+        assertFalse(deletedProduct);
     }
 }
