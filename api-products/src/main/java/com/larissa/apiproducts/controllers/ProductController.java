@@ -22,15 +22,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ProductController {
     @Autowired
     ProductRepository productRepository;
-
     @Autowired
     ProductService productService;
-
     @PostMapping("/products")
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
         ProductModel product = productService.saveNewProduct(productRecordDto);
-        //var productModel = new ProductModel();
-        //BeanUtils.copyProperties(productRecordDto, productModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(product));
     }
 
@@ -59,15 +55,12 @@ public class ProductController {
     @PutMapping("/products/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
                                                 @RequestBody @Valid ProductRecordDto productRecordDto) {
-        Optional<ProductModel> product = productRepository.findById(id);
+        Optional<ProductModel> optionalProduct = productService.updateAProduct(id, productRecordDto);
 
-        if (product.isEmpty()) {
+        if (optionalProduct.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
         }
-
-        var productModel = product.get();
-        BeanUtils.copyProperties(productRecordDto, productModel);
-        return ResponseEntity.status(HttpStatus.OK).body(productRepository.save(productModel));
+        return ResponseEntity.status(HttpStatus.OK).body(optionalProduct.get());
 
     }
 

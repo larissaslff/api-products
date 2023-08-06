@@ -1,5 +1,6 @@
 package com.larissa.apiproducts.services;
 
+import com.larissa.apiproducts.dtos.ConvertProduct;
 import com.larissa.apiproducts.dtos.ProductRecordDto;
 import com.larissa.apiproducts.models.ProductModel;
 import com.larissa.apiproducts.repositories.ProductRepository;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.larissa.apiproducts.dtos.ConvertProduct.convertToModel;
 
 @Service
 public class ProductService {
@@ -29,6 +32,17 @@ public class ProductService {
         BeanUtils.copyProperties(productDto, product);
         ProductModel savedProduct = productRepository.save(product);
         return savedProduct;
+    }
+    public Optional<ProductModel> updateAProduct(UUID id, ProductRecordDto productRecordDto) {
+        Optional<ProductModel> product = productRepository.findById(id);
+        if(product.isPresent()) {
+            ProductModel updatedProduct = convertToModel(productRecordDto);
+            ProductModel saved = productRepository.save(updatedProduct);
+            return Optional.of(saved);
+        }
+        else {
+            return product;
+        }
     }
 
 }
