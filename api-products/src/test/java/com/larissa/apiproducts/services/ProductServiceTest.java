@@ -1,6 +1,5 @@
 package com.larissa.apiproducts.services;
 
-import com.larissa.apiproducts.dtos.ConvertProduct;
 import com.larissa.apiproducts.dtos.ProductRecordDto;
 import com.larissa.apiproducts.models.ProductModel;
 import com.larissa.apiproducts.repositories.ProductRepository;
@@ -18,8 +17,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.larissa.apiproducts.dtos.ConvertProduct.convertToModel;
-import static com.larissa.apiproducts.dtos.ConvertProduct.convertToRecord;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -85,6 +82,18 @@ class ProductServiceTest {
         assertEquals(product.getIdProduct(), productModel.get().getIdProduct());
         assertEquals(product.getName(), productModel.get().getName());
         assertEquals(BigDecimal.valueOf(50.000), productModel.get().getValue());
+    }
+
+    @Test
+    public void shouldNotUpdateProduct() {
+        UUID nonExistentId = UUID.randomUUID();
+
+        when(productRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+
+        Optional<ProductModel> productNotFound = service.updateAProduct(nonExistentId, productRecordDto);
+
+        assertTrue(productNotFound.isEmpty());
+
 
     }
 }
