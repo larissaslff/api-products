@@ -26,7 +26,7 @@ class ProductServiceTest {
     @Mock
     ProductRepository productRepository;
     @InjectMocks
-    ProductService service;
+    ProductServiceImplementation service;
     private ProductModel p1;
     private ProductRecordDto productRecordDto;
     private List<ProductModel> listaDeProdutos;
