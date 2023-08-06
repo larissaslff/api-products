@@ -17,6 +17,7 @@ import static com.larissa.apiproducts.dtos.ConvertProduct.convertToModel;
 public class ProductService {
     @Autowired
     ProductRepository productRepository;
+
     public List<ProductModel> getProducts() {
         List<ProductModel> allProducts = productRepository.findAll();
         return allProducts;
@@ -26,23 +27,34 @@ public class ProductService {
         Optional<ProductModel> product = productRepository.findById(id);
         return product;
     }
+
     public ProductModel saveNewProduct(ProductRecordDto productDto) {
         ProductModel product = new ProductModel();
         BeanUtils.copyProperties(productDto, product);
         ProductModel savedProduct = productRepository.save(product);
         return savedProduct;
     }
+
     public Optional<ProductModel> updateAProduct(UUID id, ProductRecordDto productRecordDto) {
         Optional<ProductModel> product = productRepository.findById(id);
-        if(product.isPresent()) {
+        if (product.isPresent()) {
             ProductModel updatedProduct = convertToModel(productRecordDto);
             updatedProduct.setIdProduct(id);
             ProductModel saved = productRepository.save(updatedProduct);
             return Optional.of(saved);
-        }
-        else {
+        } else {
             return product;
         }
     }
 
+    public boolean deleteProduct(UUID id) {
+        Optional<ProductModel> product = productRepository.findById(id);
+
+        if (product.isEmpty()) {
+            return false;
+        }
+
+        productRepository.deleteById(id);
+        return true;
+    }
 }

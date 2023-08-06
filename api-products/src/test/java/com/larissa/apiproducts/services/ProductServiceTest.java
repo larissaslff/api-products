@@ -11,15 +11,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductServiceTest {
@@ -38,6 +39,7 @@ class ProductServiceTest {
         listaDeProdutos = List.of(p1);
         productRecordDto = new ProductRecordDto(p1.getName(), p1.getValue());
     }
+
     @Test
     public void shouldShowAllProducts() {
         when(productRepository.findAll()).thenReturn(listaDeProdutos);
@@ -68,6 +70,7 @@ class ProductServiceTest {
         assertEquals(p1.getIdProduct(), newProduct.getIdProduct());
         assertEquals(p1.getValue(), newProduct.getValue());
     }
+
     @Test
     public void shouldUpdateProduct() {
         ProductRecordDto productToUpdate = new ProductRecordDto(p1.getName(), BigDecimal.valueOf(50.000));

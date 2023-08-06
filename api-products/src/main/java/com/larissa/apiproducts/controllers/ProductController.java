@@ -5,7 +5,6 @@ import com.larissa.apiproducts.models.ProductModel;
 import com.larissa.apiproducts.repositories.ProductRepository;
 import com.larissa.apiproducts.services.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,7 @@ public class ProductController {
     ProductRepository productRepository;
     @Autowired
     ProductService productService;
+
     @PostMapping("/products")
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
         ProductModel product = productService.saveNewProduct(productRecordDto);
@@ -65,13 +65,12 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<Object> deleteProducti(@PathVariable(value = "id") UUID id) {
-        Optional<ProductModel> product = productRepository.findById(id);
-        if (product.isEmpty()) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id) {
+        boolean deletedProduct = productService.deleteProduct(id);
+
+        if (!deletedProduct) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
         }
-
-        productRepository.delete(product.get());
 
         return ResponseEntity.status(HttpStatus.OK).body("Product deleted");
     }
