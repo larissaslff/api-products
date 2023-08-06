@@ -86,18 +86,5 @@ class ProductServiceTest {
         assertEquals(product.getName(), productModel.get().getName());
         assertEquals(BigDecimal.valueOf(50.000), productModel.get().getValue());
 
-
-//        ProductModel updatedProduct = p1;
-//        updatedProduct.setValue(BigDecimal.valueOf(50.00));
-//
-//        ProductRecordDto dto = convertToRecord(updatedProduct);
-//
-//        when(productRepository.save(updatedProduct)).thenReturn(updatedProduct);
-//
-//        Optional<ProductModel> productModel = service.updateAProduct(p1.getIdProduct(), dto);
-//
-//        //assertEquals(p1.getIdProduct(), productModel.get().getIdProduct());
-//        assertEquals(p1.getName(), productModel.get().getName());
-
     }
 }
