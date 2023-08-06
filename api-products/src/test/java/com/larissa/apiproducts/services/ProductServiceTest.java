@@ -1,5 +1,6 @@
 package com.larissa.apiproducts.services;
 
+import com.larissa.apiproducts.dtos.ConvertProduct;
 import com.larissa.apiproducts.dtos.ProductRecordDto;
 import com.larissa.apiproducts.models.ProductModel;
 import com.larissa.apiproducts.repositories.ProductRepository;
@@ -17,8 +18,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.larissa.apiproducts.dtos.ConvertProduct.convertToModel;
+import static com.larissa.apiproducts.dtos.ConvertProduct.convertToRecord;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -67,5 +70,34 @@ class ProductServiceTest {
         assertEquals(p1.getName(), newProduct.getName());
         assertEquals(p1.getIdProduct(), newProduct.getIdProduct());
         assertEquals(p1.getValue(), newProduct.getValue());
+    }
+    @Test
+    public void shouldUpdateProduct() {
+        ProductRecordDto productToUpdate = new ProductRecordDto(p1.getName(), BigDecimal.valueOf(50.000));
+        ProductModel product = new ProductModel(p1.getIdProduct(), productToUpdate.name(), productToUpdate.value());
+
+        when(productRepository.findById(p1.getIdProduct())).thenReturn(Optional.of(p1));
+
+        when(productRepository.save(any(ProductModel.class))).thenReturn(product);
+
+        Optional<ProductModel> productModel = service.updateAProduct(product.getIdProduct(), productToUpdate);
+
+        assertEquals(product.getIdProduct(), productModel.get().getIdProduct());
+        assertEquals(product.getName(), productModel.get().getName());
+        assertEquals(BigDecimal.valueOf(50.000), productModel.get().getValue());
+
+
+//        ProductModel updatedProduct = p1;
+//        updatedProduct.setValue(BigDecimal.valueOf(50.00));
+//
+//        ProductRecordDto dto = convertToRecord(updatedProduct);
+//
+//        when(productRepository.save(updatedProduct)).thenReturn(updatedProduct);
+//
+//        Optional<ProductModel> productModel = service.updateAProduct(p1.getIdProduct(), dto);
+//
+//        //assertEquals(p1.getIdProduct(), productModel.get().getIdProduct());
+//        assertEquals(p1.getName(), productModel.get().getName());
+
     }
 }

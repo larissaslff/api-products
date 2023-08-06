@@ -37,6 +37,7 @@ public class ProductService {
         Optional<ProductModel> product = productRepository.findById(id);
         if(product.isPresent()) {
             ProductModel updatedProduct = convertToModel(productRecordDto);
+            updatedProduct.setIdProduct(id);
             ProductModel saved = productRepository.save(updatedProduct);
             return Optional.of(saved);
         }
