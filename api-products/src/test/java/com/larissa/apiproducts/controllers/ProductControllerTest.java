@@ -121,4 +121,14 @@ class ProductControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void shouldNotDeleteProduct() throws Exception {
+        when(productService.deleteProduct(ID)).thenReturn(false);
+
+        mvc.perform(delete(URI + "/{id}", ID))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").value("Product not found."));
+    }
+
+
 }
