@@ -6,6 +6,7 @@ import com.larissa.apiproducts.models.ProductModel;
 import com.larissa.apiproducts.repositories.ProductRepository;
 import com.larissa.apiproducts.services.ProductService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -110,6 +111,14 @@ class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(productToUpdate)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$").value("Product not found."));
+    }
+
+    @Test
+    public void shouldDeleteProduct() throws Exception {
+        when(productService.deleteProduct(ID)).thenReturn(true);
+
+        mvc.perform(delete(URI + "/{id}", ID))
+                .andExpect(status().isOk());
     }
 
 }
