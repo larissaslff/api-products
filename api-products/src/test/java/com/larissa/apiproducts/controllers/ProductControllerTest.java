@@ -1,7 +1,6 @@
 package com.larissa.apiproducts.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.larissa.apiproducts.dtos.ConvertProduct;
 import com.larissa.apiproducts.dtos.ProductRecordDto;
 import com.larissa.apiproducts.models.ProductModel;
 import com.larissa.apiproducts.repositories.ProductRepository;
@@ -20,8 +19,7 @@ import java.util.UUID;
 
 import static com.larissa.apiproducts.dtos.ConvertProduct.convertToRecord;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,6 +40,7 @@ class ProductControllerTest {
     private ProductModel product = new ProductModel(ID, "Notebook", VALUE);
     private ProductRecordDto productRecordDto = convertToRecord(product);
     private List<ProductModel> productsList = List.of(product);
+
     @Test
     public void shouldReturnProductsList() throws Exception {
 
@@ -78,8 +77,24 @@ class ProductControllerTest {
         when(productService.saveNewProduct(productRecordDto)).thenReturn(product);
 
         mvc.perform(post(URI).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productRecordDto)))
+                        .content(objectMapper.writeValueAsString(productRecordDto)))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void shouldUpdateProductWhenTheIdExists() throws Exception {
+        ProductModel updatedProduct = new ProductModel(ID, "Notebook 2.0", product.getValue());
+        ProductRecordDto productToUpdate = convertToRecord(updatedProduct);
+
+        when(productService.updateAProduct(ID, productToUpdate)).thenReturn(Optional.of(updatedProduct));
+
+        mvc.perform(put(URI + "/{id}", ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productToUpdate)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(updatedProduct.getName()))
+                .andExpect(jsonPath("$.value").value(updatedProduct.getValue()))
+                .andExpect(jsonPath("$.idProduct").value(updatedProduct.getIdProduct().toString()));
     }
 
 }
