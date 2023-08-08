@@ -97,4 +97,19 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.idProduct").value(updatedProduct.getIdProduct().toString()));
     }
 
+    @Test
+    public void shouldNotUpdateProductWhenTheIdDoesNotExists() throws Exception {
+        ProductModel updatedProduct = new ProductModel(ID, "Notebook 2.0", product.getValue());
+        ProductRecordDto productToUpdate = convertToRecord(updatedProduct);
+
+        UUID randomUUID = UUID.randomUUID();
+        when(productService.updateAProduct(randomUUID, productToUpdate)).thenReturn(Optional.empty());
+
+        mvc.perform(put(URI + "/{id}", randomUUID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productToUpdate)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").value("Product not found."));
+    }
+
 }
