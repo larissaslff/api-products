@@ -59,8 +59,8 @@ public class ProductServiceImplementation implements ProductService {
     }
 
     @Override
-    public Optional<ProductModel> findByName(String productName) {
-        Optional<ProductModel> product = productRepository.findByName(productName);
+    public List<ProductModel> findByName(String productName) {
+        List<ProductModel> product = productRepository.findByNameContainingIgnoreCase(productName);
         return product;
     }
 }

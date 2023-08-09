@@ -6,6 +6,7 @@ import com.larissa.apiproducts.repositories.ProductRepository;
 import com.larissa.apiproducts.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +51,12 @@ public class ProductController {
         }
         product.get().add(linkTo(methodOn(ProductController.class).getAll()).withRel("Products List"));
         return ResponseEntity.status(HttpStatus.OK).body(product.get());
+    }
+
+    @GetMapping("/products/search")
+    public ResponseEntity<List<ProductModel>> getByProductName(@RequestParam String productName) {
+        List<ProductModel> product = productService.findByName(productName);
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @PutMapping("/products/{id}")

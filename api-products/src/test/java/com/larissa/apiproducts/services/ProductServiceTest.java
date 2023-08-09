@@ -120,10 +120,11 @@ class ProductServiceTest {
     @Test
     public void shouldReturnAProductWhenSearchedByName(){
         String productName = "Panela";
-        when(productRepository.findByName(productName)).thenReturn(Optional.of(p1));
+        when(productRepository.findByNameContainingIgnoreCase(productName)).thenReturn(List.of(p1));
 
-        Optional<ProductModel> product= service.findByName(productName);
+        List<ProductModel> searchedByName = service.findByName(productName);
 
-        assertEquals(p1.getName(), product.get().getName());
+        assertEquals(1, searchedByName.size());
+        assertEquals(p1.getName(), searchedByName.get(0).getName());
     }
 }
