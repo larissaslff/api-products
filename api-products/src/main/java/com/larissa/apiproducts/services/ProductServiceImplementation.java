@@ -60,6 +60,7 @@ public class ProductServiceImplementation implements ProductService {
 
     @Override
     public Optional<ProductModel> findByName(String productName) {
-        return Optional.empty();
+        Optional<ProductModel> product = productRepository.findByName(productName);
+        return product;
     }
 }
