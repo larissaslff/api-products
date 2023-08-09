@@ -116,4 +116,11 @@ class ProductServiceTest {
 
         assertFalse(deletedProduct);
     }
+
+    @Test
+    public void shouldReturnAProductWhenSearchedByName(){
+        Optional<ProductModel> product= service.findByName("Panela");
+
+        assertEquals(product.get().getName(), "Panela");
+    }
 }
