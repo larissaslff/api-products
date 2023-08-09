@@ -130,5 +130,13 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$").value("Product not found."));
     }
 
+    @Test
+    public void shouldReturnAListWithProduct() throws Exception {
+        when(productService.findByName(product.getName())).thenReturn(List.of(product));
+
+        mvc.perform(get(URI + "/search").param("productName", product.getName()))
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andExpect(jsonPath("$[0].name").value(product.getName()));
+    }
 
 }
