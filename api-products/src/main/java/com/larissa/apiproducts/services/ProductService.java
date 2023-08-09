@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 public interface ProductService {
-    public Page<ProductModel> getProducts(int pageSize);
+    public Page<ProductModel> getProducts(int page, int size);
 
     public Optional<ProductModel> getProductById(UUID id);
 

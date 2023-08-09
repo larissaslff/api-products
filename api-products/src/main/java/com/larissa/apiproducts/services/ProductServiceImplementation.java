@@ -6,6 +6,7 @@ import com.larissa.apiproducts.repositories.ProductRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,9 @@ public class ProductServiceImplementation implements ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public Page<ProductModel> getProducts(int pageSize) {
-        Page<ProductModel> allProducts = productRepository.findAll(Pageable.ofSize(pageSize));
+    public Page<ProductModel> getProducts(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<ProductModel> allProducts = productRepository.findAll(pageRequest);
         return allProducts;
     }
 

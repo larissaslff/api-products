@@ -33,12 +33,13 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<Page<ProductModel>> getAll(@RequestParam int pageSize) {
-        Page<ProductModel> products = productService.getProducts(pageSize);
+    public ResponseEntity<Page<ProductModel>> getAll(@RequestParam(defaultValue = "3") int pageSize,
+                                                     @RequestParam(defaultValue = "0") int page) {
+        Page<ProductModel> products = productService.getProducts(page, pageSize);
         if (!products.isEmpty()) {
             for (ProductModel product : products) {
                 UUID id = product.getIdProduct();
-                product.add(linkTo(methodOn(ProductController.class).getOneProduct(id, 1)).withSelfRel());
+                product.add(linkTo(methodOn(ProductController.class).getOneProduct(id, pageSize,page)).withSelfRel());
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(products);
@@ -46,12 +47,13 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id,
-                                                @RequestParam(defaultValue = "0") int pageSize) {
+                                                @RequestParam(defaultValue = "1") int pageSize,
+                                                @RequestParam(defaultValue = "0") int page) {
         Optional<ProductModel> product = productService.getProductById(id);
         if (product.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
         }
-        product.get().add(linkTo(methodOn(ProductController.class).getAll(pageSize)).withRel("Products List"));
+        product.get().add(linkTo(methodOn(ProductController.class).getAll(page, pageSize)).withRel("Products List"));
         return ResponseEntity.status(HttpStatus.OK).body(product.get());
     }
 
