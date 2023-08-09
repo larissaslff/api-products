@@ -2,6 +2,7 @@ package com.larissa.apiproducts.services;
 
 import com.larissa.apiproducts.dtos.ProductRecordDto;
 import com.larissa.apiproducts.models.ProductModel;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 @Service
 public interface ProductService {
-    public List<ProductModel> getProducts();
+    public Page<ProductModel> getProducts(int pageSize);
 
     public Optional<ProductModel> getProductById(UUID id);
 
