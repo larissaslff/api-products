@@ -10,6 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,6 +33,8 @@ class ProductServiceTest {
     private ProductModel p1;
     private ProductRecordDto productRecordDto;
     private List<ProductModel> listaDeProdutos;
+    private int pageSize = 2;
+    private int pageNumber = 0;
 
     @BeforeAll
     public void setUp() {
@@ -41,10 +46,11 @@ class ProductServiceTest {
 
     @Test
     public void shouldShowAllProducts() {
-        when(productRepository.findAll()).thenReturn(listaDeProdutos);
-        List<ProductModel> products = service.getProducts();
+        Page<ProductModel> page = new PageImpl<>(listaDeProdutos);
+        when(productRepository.findAll(PageRequest.of(pageNumber, pageSize))).thenReturn(page);
+        Page<ProductModel> products = service.getProducts(pageNumber, pageSize);
 
-        assertEquals(1, products.size());
+        assertEquals(1, products.getTotalElements());
         assertEquals(listaDeProdutos.get(0).getName(), p1.getName());
         assertEquals(listaDeProdutos.get(0).getValue(), p1.getValue());
     }

@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,6 +39,8 @@ class ProductControllerTest {
     private ObjectMapper objectMapper;
     private final String URI = "/products";
     private final UUID ID = UUID.randomUUID();
+    private int pageSize = 2;
+    private int pageNumber = 0;
     private final BigDecimal VALUE = BigDecimal.valueOf(60.000);
     private ProductModel product = new ProductModel(ID, "Notebook", VALUE);
     private ProductRecordDto productRecordDto = convertToRecord(product);
@@ -43,8 +48,9 @@ class ProductControllerTest {
 
     @Test
     public void shouldReturnProductsList() throws Exception {
+        Page<ProductModel> mockPage = new PageImpl<>(productsList);
 
-        when(productService.getProducts()).thenReturn(productsList);
+        when(productService.getProducts(pageNumber, pageSize)).thenReturn(mockPage);
 
         mvc.perform(get(URI))
                 .andExpect(status().isOk())
