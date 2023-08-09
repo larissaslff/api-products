@@ -57,4 +57,9 @@ public class ProductServiceImplementation implements ProductService {
         productRepository.deleteById(id);
         return true;
     }
+
+    @Override
+    public Optional<ProductModel> findByName(String panela) {
+        return Optional.empty();
+    }
 }
