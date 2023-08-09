@@ -59,7 +59,7 @@ public class ProductServiceImplementation implements ProductService {
     }
 
     @Override
-    public Optional<ProductModel> findByName(String panela) {
+    public Optional<ProductModel> findByName(String productName) {
         return Optional.empty();
     }
 }

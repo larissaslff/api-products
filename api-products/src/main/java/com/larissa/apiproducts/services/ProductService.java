@@ -19,5 +19,5 @@ public interface ProductService {
     public Optional<ProductModel> updateAProduct(UUID id, ProductRecordDto productRecordDto);
 
     public boolean deleteProduct(UUID id);
-    Optional<ProductModel> findByName(String panela);
+    Optional<ProductModel> findByName(String productName);
 }
