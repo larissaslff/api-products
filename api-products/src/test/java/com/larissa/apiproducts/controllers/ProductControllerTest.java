@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -52,11 +51,14 @@ class ProductControllerTest {
 
         when(productService.getProducts(pageNumber, pageSize)).thenReturn(mockPage);
 
-        mvc.perform(get(URI))
+        mvc.perform(get(URI).param("pageSize", String.valueOf(pageSize))
+                        .param("page", String.valueOf(pageNumber)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
-                .andExpect(jsonPath("$[0].name").value(product.getName()))
-                .andExpect(jsonPath("$[0].value").value(product.getValue().toString()));
+                .andExpect(jsonPath("$.content[0].name").value(product.getName()))
+                .andExpect(jsonPath("$.content[0].value").value(product.getValue().toString()))
+                .andExpect(jsonPath("$.totalElements").value(productsList.size()))
+                .andExpect(jsonPath("$.number").value(pageNumber));
     }
 
     @Test
